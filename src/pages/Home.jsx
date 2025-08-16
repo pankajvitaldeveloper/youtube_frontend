@@ -3,7 +3,7 @@ import CategorySlider from '../components/CategorySlider'
 
 const Home = () => {
   return (
-     <div className='mt-3 pl-2 pr-5'>
+     <div className='pt-3 pl-2 pr-5 bg-white dark:bg-black text-black dark:text-white'>
       <CategorySlider />
      </div>
   )
