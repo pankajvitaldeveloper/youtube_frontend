@@ -6,7 +6,7 @@ const HeaderLeft = ({ onToggleSidebar }) => {
     <div className="flex items-center space-x-4">
       <button
         onClick={onToggleSidebar}
-        className="text-2xl cursor-pointer md:hidden text-white"
+        className="text-2xl cursor-pointer text-white"
       >
         <GiHamburgerMenu />
       </button>
