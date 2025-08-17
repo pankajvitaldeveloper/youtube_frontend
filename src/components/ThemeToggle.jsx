@@ -21,7 +21,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={() => setDark(!dark)}
-      className="p-2 rounded-full transition-colors"
+      className="p-2 mr-2 rounded-full transition-colors cursor-pointer"
     >
       {dark ? (
         <FaMoon className="text-white text-xl" />
