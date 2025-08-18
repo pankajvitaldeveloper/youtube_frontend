@@ -1,6 +1,7 @@
 import React from "react";
 import { MdHome, MdSubscriptions, MdOutlineVideoLibrary } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+import HeaderLeft from "./HeaderComponents/HeaderLeft";
 
 const menuItems = [
   { icon: <MdHome />, label: "Home", path: "/" },
@@ -9,32 +10,51 @@ const menuItems = [
   { icon: <MdSubscriptions />, label: "Shorts", path: "/shorts" },
   { icon: <MdOutlineVideoLibrary />, label: "History", path: "/history" },
   { icon: <MdOutlineVideoLibrary />, label: "Playlists", path: "/playlists" },
-  { icon: <MdOutlineVideoLibrary />, label: "Your videos", path: "/your-videos" },
-  { icon: <MdOutlineVideoLibrary />, label: "Watch Later", path: "/watch-later" },
+  {
+    icon: <MdOutlineVideoLibrary />,
+    label: "Your videos",
+    path: "/your-videos",
+  },
+  {
+    icon: <MdOutlineVideoLibrary />,
+    label: "Watch Later",
+    path: "/watch-later",
+  },
 ];
 
-const Sidebar = ({ isOpen }) => {
+const Sidebar = ({ isOpen, onToggleSidebar }) => {
+  const handleNavLinkClick = () => {
+    // Close sidebar only on mobile screens (width < 768px)
+    if (window.innerWidth < 768) {
+      onToggleSidebar(false);
+    }
+  };
+
   return (
     <div
       className={`
-        fixed md:static top-0 left-0 h-screen p-3 transition-all duration-300 ease-in-out z-30 overflow-hidden
+        fixed md:static top-0 left-0 h-screen p-3 transition-all duration-300 ease-in-out z-40 overflow-hidden
         bg-white dark:bg-black text-black dark:text-white
-
         /* mobile: slide in/out */
         ${isOpen ? "translate-x-0 w-64" : "-translate-x-full w-0"}
         /* desktop: collapsible width */
         ${isOpen ? "md:w-56 md:translate-x-0" : "md:w-20 md:translate-x-0"}
       `}
     >
-      
       <ul className="space-y-2">
+        <div className="block md:hidden pb-5">
+          <HeaderLeft onToggleSidebar={onToggleSidebar} />
+        </div>
         {menuItems.map((item, idx) => (
           <NavLink
             key={idx}
             to={item.path}
+            onClick={handleNavLinkClick} // Call handler to close sidebar on mobile
             className={({ isActive }) => `
               flex cursor-pointer p-2 rounded-lg transition-all duration-200
-              ${isOpen ? "flex-row items-center gap-4" : "flex-col items-center"}
+              ${
+                isOpen ? "flex-row items-center gap-4" : "flex-col items-center"
+              }
               ${
                 isActive
                   ? "bg-gray-200 text-black font-semibold dark:bg-[#272727] dark:text-white"

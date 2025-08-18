@@ -34,14 +34,16 @@ const FrontendLayout = () => {
   <div className="flex flex-1 overflow-hidden relative">
     {/* Backdrop for mobile overlay */}
     {isSidebarOpen && window.innerWidth < 768 && (
+
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-20"
-        onClick={handleToggleSidebar}
-      ></div>
+  className="fixed inset-0  bg-opacity-50 z-40 sm:bg-transparent bg-[#00000080]"
+  onClick={handleToggleSidebar}
+/>
+
     )}
 
     {/* Sidebar */}
-    <Sidebar isOpen={isSidebarOpen} />
+    <Sidebar isOpen={isSidebarOpen}  onToggleSidebar={handleToggleSidebar} />
 
     {/* Main content */}
     <main className="flex-1 overflow-y-auto bg-white dark:bg-black text-black dark:text-white">

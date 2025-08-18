@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import ThemeToggle from "../ThemeToggle";
 
-const HeaderRight = ({ isSearchOpen, setIsSearchOpen }) => {
+const HeaderRight = ({setIsSearchOpen }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
@@ -20,7 +20,7 @@ const HeaderRight = ({ isSearchOpen, setIsSearchOpen }) => {
     <div className="flex items-center space-x-4">
       {/* Mobile: search icon */}
       <button
-        className="md:hidden text-xl cursor-pointer text-white"
+        className="md:hidden text-xl cursor-pointer text-black bg-white dark:bg-black dark:text-white"
         onClick={() => setIsSearchOpen(true)}
       >
         <IoSearchOutline />
