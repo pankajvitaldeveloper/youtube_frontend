@@ -33,7 +33,7 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
   return (
     <div
       className={`
-        fixed md:static top-0 left-0 h-screen p-3  z-40 overflow-hidden
+        fixed md:static top-[-50px] left-0 h-screen p-3  z-40 overflow-hidden
         bg-white dark:bg-black text-black dark:text-white
         /* mobile: slide in/out */
         ${isOpen ? "translate-x-0 w-64" : "-translate-x-full w-0"}
@@ -42,7 +42,7 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
       `}
     >
       <ul className="space-y-2">
-        <div className="block md:hidden pb-5">
+        <div className="block md:hidden pl-1 pb-5">
           <HeaderLeft onToggleSidebar={onToggleSidebar} />
         </div>
         {menuItems.map((item, idx) => (

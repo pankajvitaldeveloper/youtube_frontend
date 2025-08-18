@@ -40,7 +40,7 @@ const WatchPage = () => {
   const videoId = getYouTubeId(video.videoUrl);
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-4">
+<div className="flex flex-col md:flex-row gap-6 px-3 md:px-6 lg:px-12 xl:px-20">
       {/* Video Player */}
       <div className="flex-1">
         <div className="aspect-video w-full">
