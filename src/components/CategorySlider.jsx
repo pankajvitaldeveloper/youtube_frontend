@@ -38,7 +38,7 @@ const CategorySlider = () => {
   };
 
   return (
-    <div className="relative flex items-center w-full px-4 py-2">
+    <div className="relative flex items-center w-full px-4 py-1">
       {/* Left Button */}
       {canScrollLeft && (
         <button

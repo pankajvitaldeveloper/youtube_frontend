@@ -29,11 +29,11 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
       onToggleSidebar(false);
     }
   };
-
+// transition-all duration-300 ease-in-out
   return (
     <div
       className={`
-        fixed md:static top-0 left-0 h-screen p-3 transition-all duration-300 ease-in-out z-40 overflow-hidden
+        fixed md:static top-0 left-0 h-screen p-3  z-40 overflow-hidden
         bg-white dark:bg-black text-black dark:text-white
         /* mobile: slide in/out */
         ${isOpen ? "translate-x-0 w-64" : "-translate-x-full w-0"}
