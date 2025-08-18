@@ -1,5 +1,6 @@
 import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { Link } from "react-router-dom";
 
 const HeaderLeft = ({ onToggleSidebar }) => {
   return (
@@ -12,16 +13,18 @@ const HeaderLeft = ({ onToggleSidebar }) => {
       </button>
 
       {/* Logo */}
-      <img
+      <Link to="/"> <img
         src="/img/logo-b.png"
         alt="Logo"
         className="h-6 cursor-pointer block dark:hidden"
-      />
+      /></Link>
+     <Link to="/"> 
       <img
         src="/img/logo.png"
         alt="Logo"
         className="h-6 cursor-pointer hidden dark:block"
       />
+      </Link>
     </div>
   );
 };
