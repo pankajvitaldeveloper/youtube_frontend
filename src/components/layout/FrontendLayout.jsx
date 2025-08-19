@@ -39,7 +39,7 @@ const FrontendLayout = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-white text-black dark:bg-black dark:text-white">
       {/* Header - fixed */}
       <div className="fixed top-0 left-0 w-full z-50">
         <Header onToggleSidebar={handleToggleSidebar} />
@@ -57,7 +57,7 @@ const FrontendLayout = () => {
         {/* ✅ Single Sidebar component for both desktop + mobile */}
         <div
           className={`
-            fixed top-13 h-[calc(100vh-4rem)] z-50 transition-transform duration-300
+            fixed top-0 sm:top-13 h-[calc(100vh-4rem)] z-50 transition-transform duration-300
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
             ${!isWatchPage ? "md:translate-x-0" : ""}
           `}

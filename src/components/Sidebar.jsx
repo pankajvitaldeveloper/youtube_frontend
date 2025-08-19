@@ -1,78 +1,78 @@
 import React from "react";
-import { MdHome, MdSubscriptions, MdOutlineVideoLibrary } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import HeaderLeft from "./HeaderComponents/HeaderLeft";
-
-const menuItems = [
-  { icon: <MdHome />, label: "Home", path: "/" },
-  { icon: <MdSubscriptions />, label: "Subscriptions", path: "/subscriptions" },
-  { icon: <MdOutlineVideoLibrary />, label: "Library", path: "/library" },
-  { icon: <MdSubscriptions />, label: "Shorts", path: "/shorts" },
-  { icon: <MdOutlineVideoLibrary />, label: "History", path: "/history" },
-  { icon: <MdOutlineVideoLibrary />, label: "Playlists", path: "/playlists" },
-  {
-    icon: <MdOutlineVideoLibrary />,
-    label: "Your videos",
-    path: "/your-videos",
-  },
-  {
-    icon: <MdOutlineVideoLibrary />,
-    label: "Watch Later",
-    path: "/watch-later",
-  },
-];
+import { mainMenu, youMenu, exploreMenu } from "./ui/Sidebar";
 
 const Sidebar = ({ isOpen, onToggleSidebar }) => {
   const handleNavLinkClick = () => {
-    // Close sidebar only on mobile screens (width < 768px)
-    if (window.innerWidth < 768) {
-      onToggleSidebar(false);
-    }
+    if (window.innerWidth < 768) onToggleSidebar(false); // Close on click for mobile
   };
-// transition-all duration-300 ease-in-out
+
+  // Show only first 3 items when closed
+  const visibleMainMenu = isOpen ? mainMenu : mainMenu.slice(0, 3);
+
+  const renderSection = (title, items) => (
+    <>
+      {isOpen && title && (
+        <h2 className="px-3 pt-3 pb-1 text-xs font-semibold uppercase text-gray-400">
+          {title}
+        </h2>
+      )}
+      {items.map((item, idx) => (
+        <NavLink
+          key={idx}
+          to={item.path}
+          onClick={handleNavLinkClick}
+          className={({ isActive }) => `
+            flex cursor-pointer py-2 rounded-lg transition-all duration-200 
+            ${isOpen ? "flex-row items-center gap-4" : "flex-col items-center justify-center"}
+            ${isActive
+              ? "bg-gray-200 text-black font-semibold dark:bg-[#272727] dark:text-white "
+              : "hover:bg-gray-200 hover:text-black dark:hover:bg-[#272727] dark:hover:text-white"}
+          `}
+        >
+          <span className="text-xl">{item.svg}</span>
+          {isOpen ? (
+            <span className="text-sm">{item.name}</span>
+          ) : (
+            <span className="text-[11px] mt-1 text-center">{item.name}</span>
+          )}
+        </NavLink>
+      ))}
+    </>
+  );
+
   return (
     <div
       className={`
-        fixed md:static top-[-50px] left-0 h-screen p-3  z-40 overflow-hidden
-        bg-white dark:bg-black text-black dark:text-white
-        /* mobile: slide in/out */
-        ${isOpen ? "translate-x-0 w-64" : "-translate-x-full w-0"}
-        /* desktop: collapsible width */
-        ${isOpen ? "md:w-56 md:translate-x-0" : "md:w-20 md:translate-x-0"}
+        fixed md:static top-0 sm:top-13 left-0 h-screen py-3 z-40 overflow-y-hidden hover:overflow-y-auto scrollbar-thin scrollbar-thumb-rounded
+        bg-[#000] text-white
+        transition-all duration-300 ease-in-out
+        ${isOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full"}
+        ${isOpen ? "md:w-56 md:translate-x-0" : "md:w-16 md:translate-x-0"}
+        ${!isOpen && "md:overflow-hidden"}
       `}
+      style={{ maxHeight: "calc(100vh - 56px)", scrollbarWidth: "thin", scrollbarColor: "#888 #2f2f2f" }}
     >
       <ul className="space-y-2">
+        {/* Mobile Hamburger Header - Only visible when sidebar can be toggled */}
         <div className="block md:hidden pl-1 pb-5">
           <HeaderLeft onToggleSidebar={onToggleSidebar} />
         </div>
-        {menuItems.map((item, idx) => (
-          <NavLink
-            key={idx}
-            to={item.path}
-            onClick={handleNavLinkClick} // Call handler to close sidebar on mobile
-            className={({ isActive }) => `
-              flex cursor-pointer p-2 rounded-lg transition-all duration-200
-              ${
-                isOpen ? "flex-row items-center gap-4" : "flex-col items-center"
-              }
-              ${
-                isActive
-                  ? "bg-gray-200 text-black font-semibold dark:bg-[#272727] dark:text-white"
-                  : "hover:bg-gray-200 hover:text-black dark:hover:bg-[#272727] dark:hover:text-white"
-              }
-            `}
-          >
-            <span className="text-xl">{item.icon}</span>
-            {isOpen ? (
-              <span className="text-sm">{item.label}</span>
-            ) : (
-              <span className="text-[10px] mt-1 text-center">{item.label}</span>
-            )}
-          </NavLink>
-        ))}
+
+        {/* Main Menu */}
+        {renderSection(null, visibleMainMenu)}
+
+        {/* Show dividers + other sections ONLY if open */}
+        {isOpen && <hr className="my-2 border-gray-600" />}
+        {isOpen && renderSection("You", youMenu)}
+
+        {isOpen && <hr className="my-2 border-gray-600" />}
+        {isOpen && renderSection("Explore", exploreMenu)}
       </ul>
     </div>
   );
 };
 
 export default Sidebar;
+// fine
