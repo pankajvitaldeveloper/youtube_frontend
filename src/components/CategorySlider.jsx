@@ -1,12 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-
-const categories = [
-  "All", "Web Development", "JavaScript", "Data Structures", "Music",
-  "Gaming", "ReactJS", "Movies", "Sports", "News",
-  "Gaming", "ReactJS", "Movies", "Sports", "News",
-  "Web Development", "JavaScript", "Data Structures", "Music",
-];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVideosByCategory, fetchAllVideos } from "../redux/slices/videoSlice";
 
 const CategorySlider = () => {
   const scrollRef = useRef(null);
@@ -14,19 +9,27 @@ const CategorySlider = () => {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const dispatch = useDispatch();
+  const { items, allItems } = useSelector((state) => state.videos); 
+  // 👆 we'll store both "all videos" and "filtered videos" in the slice
+
+  // ✅ dynamic categories should always come from `allItems` (never filtered ones)
+  const categories = ["All", ...new Set(allItems.map((v) => v.category))];
+
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1); // Small buffer for precision
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
     }
   };
 
   useEffect(() => {
+    dispatch(fetchAllVideos()); // load all videos initially
     checkScroll();
     window.addEventListener("resize", checkScroll);
     return () => window.removeEventListener("resize", checkScroll);
-  }, []);
+  }, [dispatch]);
 
   const scroll = (direction) => {
     const { clientWidth } = scrollRef.current;
@@ -35,6 +38,15 @@ const CategorySlider = () => {
       behavior: "smooth",
     });
     checkScroll();
+  };
+
+  const handleCategoryClick = (cat) => {
+    setActiveCategory(cat);
+    if (cat === "All") {
+      dispatch(fetchAllVideos());
+    } else {
+      dispatch(fetchVideosByCategory(cat));
+    }
   };
 
   return (
@@ -58,7 +70,7 @@ const CategorySlider = () => {
         {categories.map((cat, idx) => (
           <button
             key={idx}
-            onClick={() => setActiveCategory(cat)}
+            onClick={() => handleCategoryClick(cat)}
             className={`px-4 py-1.5 whitespace-nowrap rounded-lg transition-colors
               ${
                 activeCategory === cat

@@ -20,7 +20,11 @@ const Home = () => {
       <VideoGridSkeleton />
     </div>
   );
-  if (error) return <p className="px-5 text-red-500">Error: {error}</p>;
+  if (error) return <div className="px-5 py-3 text-center">
+    <p className="inline-block px-4 py-2 rounded-lg bg-red-100 text-red-600 font-medium shadow-sm">
+      ⚠️ "No results found"
+    </p>
+  </div>;
 
   return (
     <div className="px-5">
