@@ -1,83 +1,40 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { fetchVideoById } from "../redux/slices/videoSlice";
 
-const getYouTubeId = (url) => {
-  try {
-    const regExp =
-      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
-  } catch {
-    return null;
-  }
-};
+import VideoPlayer from "../components/watchpage/VideoPlayer";
+import VideoInfo from "../components/watchpage/VideoInfo";
+import SuggestedVideos from "../components/watchpage/SuggestedVideos";
+import CommentSection from "../components/watchpage/CommentSection";
 
 const WatchPage = () => {
   const { id } = useParams();
-  const [video, setVideo] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { currentVideo, loading, error } = useSelector(
+    (state) => state.videos
+  );
 
   useEffect(() => {
-    const fetchVideo = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/api/video/${id}`);
-        const data = await res.json();
-        console.log(data, "check")
-        setVideo(data.videoById);
-      } catch (err) {
-        console.error("Error fetching video:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (id) dispatch(fetchVideoById(id));
+  }, [dispatch, id]);
 
-    fetchVideo();
-  }, [id]);
-
-  if (loading) return <p>Loading...</p>;
-  if (!video) return <p>Video not found</p>;
-
-  const videoId = getYouTubeId(video.videoUrl);
+  if (loading) return <p className="p-4 text-center">Loading...</p>;
+  if (error) return <p className="p-4 text-center text-red-500">Error: {error}</p>;
+  if (!currentVideo) return <p className="p-4 text-center">Video not found</p>;
 
   return (
-<div className="flex flex-col md:flex-row gap-6 px-3 md:px-6 lg:px-12 xl:px-20">
-      {/* Video Player */}
+    <div className="flex flex-col md:flex-row gap-6 px-3 md:px-6 lg:px-12 xl:px-20">
+      {/* Left Side (Video + Info + Comments) */}
       <div className="flex-1">
-        <div className="aspect-video w-full">
-          {videoId ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1`}
-              title={video.title}
-              className="w-full h-full rounded-md"
-              frameBorder="0"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-            />
-          ) : (
-            <video
-              src={video.videoUrl}
-              className="w-full h-full rounded-md"
-              controls
-              autoPlay
-            />
-          )}
-        </div>
-
-        {/* Video Info */}
-        <h2 className="mt-4 text-xl font-bold dark:text-white">
-          {video.title}
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          {video.channelId} • {video.viewers?.length || 0} views
-        </p>
+        <VideoPlayer video={currentVideo} />
+        <VideoInfo video={currentVideo} />
+        <CommentSection videoId={id} />
       </div>
 
-      {/* Suggested Videos Sidebar */}
+      {/* Right Side (Suggested Videos) */}
       <div className="w-full md:w-96">
-        <h3 className="font-semibold mb-3 dark:text-white">
-          Suggested Videos
-        </h3>
-        {/* TODO: Map through recommended videos */}
+        <SuggestedVideos currentVideoId={id} />
       </div>
     </div>
   );

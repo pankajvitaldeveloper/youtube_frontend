@@ -11,6 +11,21 @@ export const fetchAllVideos = createAsyncThunk("videos/fetchAll", async () => {
   return Array.isArray(res.data.videoAllData) ? res.data.videoAllData : [];
 });
 
+
+// Fetch video by id
+export const fetchVideoById = createAsyncThunk(
+  "videos/fetchById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/video/${id}`);
+      const data = await res.json();
+      return data.videoById;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 // Fetch by category
 export const fetchVideosByCategory = createAsyncThunk(
   "videos/fetchByCategory",
@@ -68,6 +83,20 @@ const videoSlice = createSlice({
       .addCase(fetchAllVideos.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+
+      //fetch single video
+      .addCase(fetchVideoById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchVideoById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentVideo = action.payload;
+      })
+      .addCase(fetchVideoById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // --- Fetch Videos by Category ---
