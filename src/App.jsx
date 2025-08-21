@@ -5,6 +5,9 @@ import Home from "./pages/Home";
 import Subscriptions from "./pages/Subscriptions";
 import FrontendLayout from "./components/layout/FrontendLayout";
 import WatchPage from "./pages/WatchPage";
+import Login from "./admin/Login";
+import Register from "./admin/Register";
+
 
 const App = () => {
   return (
@@ -16,7 +19,14 @@ const App = () => {
           <Route path="/library" element={<Library />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
         </Route>
+
+        <Route path="/login" element={ <Login />} />
+        <Route path="/register" element={<Register />} />
+
       </Routes>
+
+
+
     </BrowserRouter>
   );
 };
