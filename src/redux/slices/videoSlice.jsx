@@ -21,22 +21,38 @@ export const fetchVideosByCategory = createAsyncThunk(
   }
 );
 
-// Search videos
+// 🔎 Search videos (main results)
 export const searchVideos = createAsyncThunk("videos/search", async (query) => {
   const res = await axios.get(`${API_URL}/api/videos/search/${query}`);
   console.log("SEARCH API RESPONSE:", res.data.results);
   return Array.isArray(res.data.results) ? res.data.results : [];
 });
 
+// 📝 Fetch search suggestions (for dropdown only)
+export const fetchSuggestions = createAsyncThunk(
+  "videos/fetchSuggestions",
+  async (query) => {
+    const res = await axios.get(`${API_URL}/api/videos/search/${query}`);
+    console.log("SUGGESTIONS API RESPONSE:", res.data.results);
+    // You can map to only needed fields
+    return Array.isArray(res.data.results) ? res.data.results : [];
+  }
+);
+
 const videoSlice = createSlice({
   name: "videos",
   initialState: {
-    items: [], // always an array of videos
+    items: [], // main results
     allItems: [],
+    suggestions: [], // ✅ new for dropdown
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    clearSuggestions: (state) => {
+      state.suggestions = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       // --- Fetch All Videos ---
@@ -46,8 +62,8 @@ const videoSlice = createSlice({
       })
       .addCase(fetchAllVideos.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload; // current visible list
-        state.allItems = action.payload; // save full list for categories
+        state.items = action.payload;
+        state.allItems = action.payload;
       })
       .addCase(fetchAllVideos.rejected, (state, action) => {
         state.loading = false;
@@ -61,27 +77,36 @@ const videoSlice = createSlice({
       })
       .addCase(fetchVideosByCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload; // filtered videos
+        state.items = action.payload;
       })
       .addCase(fetchVideosByCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
 
-      // --- Search Videos ---
+      // --- Search Videos (final results) ---
       .addCase(searchVideos.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(searchVideos.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = action.payload; // ✅ overwrite main results
       })
       .addCase(searchVideos.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+
+      // --- Fetch Suggestions (dropdown only) ---
+      .addCase(fetchSuggestions.fulfilled, (state, action) => {
+        state.suggestions = action.payload; // ✅ store in suggestions
+      })
+      .addCase(fetchSuggestions.rejected, (state) => {
+        state.suggestions = [];
       });
   },
 });
 
+export const { clearSuggestions } = videoSlice.actions;
 export default videoSlice.reducer;

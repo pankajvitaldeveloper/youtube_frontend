@@ -1,9 +1,42 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* body { overflow: hidden; }
-html, body, #root {
-    margin: 0;
-    padding: 0;
-  height: 100%;
-} */
+
+.scroll-container {
+  max-height: calc(100vh - 56px);
+  scrollbar-width: thin;
+  scrollbar-color: #888 #e5e7eb; /* light */
+}
+
+.dark .scroll-container {
+  scrollbar-color: #888 #2f2f2f; /* dark */
+}
+
+.scroll-container-dropdown {
+  max-height: 300px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #888 #e5e7eb; /* ✅ Light mode */
+}
+
+/* Dark mode (when <html class="dark"> is active) */
+.dark .scroll-container-dropdown {
+  scrollbar-color: #888 #2f2f2f; /* ✅ Dark mode */
+}
+
+/* Chrome, Safari, Edge custom scrollbar */
+.scroll-container-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-container-dropdown::-webkit-scrollbar-track {
+  background: #e5e7eb; /* ✅ Light mode */
+}
+.scroll-container-dropdown::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 6px;
+}
+
+/* Dark mode override for Webkit */
+.dark .scroll-container-dropdown::-webkit-scrollbar-track {
+  background: #2f2f2f;
+}
+

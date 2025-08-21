@@ -6,7 +6,7 @@ const VideoCard = ({ video }) => {
 
   return (
     <div
-      className="bg-white dark:bg-black shadow rounded-lg overflow-hidden cursor-pointer"
+      className="bg-white dark:bg-black rounded-lg overflow-hidden cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -34,27 +34,46 @@ const VideoCard = ({ video }) => {
         <Link to={`/watch/${video._id}`} className="absolute inset-0 z-10" />
       </div>
 
-      {/* Video Info */}
-      <div className="p-4">
-        {/* Title (click → watch page) */}
-        <Link to={`/watch/${video._id}`}>
-          <h3 className="text-lg font-semibold dark:text-white line-clamp-2">
-            {video.title}
-          </h3>
-        </Link>
+      {/* Video Info Section */}
+      <div className="p-3 flex gap-3">
+        {/* ✅ Channel Profile Image */}
+        {video.channelId?.profileImage ? (
+          <img
+            src={video.channelId?.profileImage}
+            alt={video.channelId?.name}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
+            {video.channelId?.name?.charAt(0).toUpperCase()}
+          </div>
+        )}
 
-        {/* Channel (click → channel page) */}
-        <Link to={`/channel/${video.channelId}`}>
-          <p className="text-sm text-gray-600 dark:text-gray-400 hover:text-white">
-            {video.channelName || video.channelId}
+        <div className="flex-1">
+          {/* Title */}
+          <Link to={`/watch/${video._id}`}>
+            <h3 className="text-sm font-semibold dark:text-white line-clamp-2">
+              {video.title}
+            </h3>
+          </Link>
+
+          {/* Channel Name */}
+          <Link to={`/channel/${video.channelId}`}>
+            <p className="text-sm text-gray-600 dark:text-gray-400 hover:text-white">
+            {video.channelId?.name || "Unknown Channel"}
           </p>
-        </Link>
+          </Link>
 
-        {/* Meta Info */}
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {video.viewers?.length || 0} views •{" "}
-          {new Date(video.uploadDate).toDateString()}
-        </p>
+          {/* Meta Info */}
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {video.viewers?.length || 0} views •{" "}
+            {new Date(video.uploadDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
+        </div>
       </div>
     </div>
   );

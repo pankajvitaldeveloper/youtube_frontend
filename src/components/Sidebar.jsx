@@ -14,7 +14,7 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
   const renderSection = (title, items) => (
     <>
       {isOpen && title && (
-        <h2 className="px-3 pt-3 pb-1 text-xs font-semibold uppercase text-gray-400">
+        <h2 className="px-3 pt-3 pb-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
           {title}
         </h2>
       )}
@@ -24,11 +24,11 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
           to={item.path}
           onClick={handleNavLinkClick}
           className={({ isActive }) => `
-            flex cursor-pointer py-2 rounded-lg transition-all duration-200 
+            flex cursor-pointer ml-3 py-2 px-1 rounded-lg transition-all duration-200 
             ${isOpen ? "flex-row items-center gap-4" : "flex-col items-center justify-center"}
             ${isActive
-              ? "bg-gray-200 text-black font-semibold dark:bg-[#272727] dark:text-white "
-              : "hover:bg-gray-200 hover:text-black dark:hover:bg-[#272727] dark:hover:text-white"}
+              ? "bg-gray-200 text-gray-900 font-semibold dark:bg-[#272727] dark:text-white"
+              : "text-gray-700 dark:text-gray-200 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-[#272727] dark:hover:text-white"}
           `}
         >
           <span className="text-xl">{item.svg}</span>
@@ -46,15 +46,15 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
     <div
       className={`
         fixed md:static top-0 sm:top-13 left-0 h-screen py-3 z-40 overflow-y-hidden hover:overflow-y-auto scrollbar-thin scrollbar-thumb-rounded
-        bg-[#000] text-white
-        transition-all duration-300 ease-in-out
+        bg-white dark:bg-[#000] text-gray-700 dark:text-gray-200
+         scroll-container 
         ${isOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full"}
         ${isOpen ? "md:w-56 md:translate-x-0" : "md:w-16 md:translate-x-0"}
         ${!isOpen && "md:overflow-hidden"}
       `}
-      style={{ maxHeight: "calc(100vh - 56px)", scrollbarWidth: "thin", scrollbarColor: "#888 #2f2f2f" }}
+    //  transition-all duration-300 ease-in-out
     >
-      <ul className="space-y-2">
+      <ul className="space-y-2 ml-2 mr-2">
         {/* Mobile Hamburger Header - Only visible when sidebar can be toggled */}
         <div className="block md:hidden pl-1 pb-5">
           <HeaderLeft onToggleSidebar={onToggleSidebar} />
@@ -64,10 +64,10 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
         {renderSection(null, visibleMainMenu)}
 
         {/* Show dividers + other sections ONLY if open */}
-        {isOpen && <hr className="my-2 border-gray-600" />}
+        {isOpen && <hr className="my-2 border-gray-300 dark:border-gray-600" />}
         {isOpen && renderSection("You", youMenu)}
 
-        {isOpen && <hr className="my-2 border-gray-600" />}
+        {isOpen && <hr className="my-2 border-gray-300 dark:border-gray-600" />}
         {isOpen && renderSection("Explore", exploreMenu)}
       </ul>
     </div>
@@ -75,4 +75,3 @@ const Sidebar = ({ isOpen, onToggleSidebar }) => {
 };
 
 export default Sidebar;
-// fine
