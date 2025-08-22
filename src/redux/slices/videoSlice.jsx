@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 // Fetch all videos
 export const fetchAllVideos = createAsyncThunk("videos/fetchAll", async () => {
   const res = await axios.get(`${API_URL}/api/video-all`);
-  // console.log("VIDEO API RESPONSE:", res.data.videoAllData);
+  console.log("VIDEO API RESPONSE:", res.data.videoAllData);
   return Array.isArray(res.data.videoAllData) ? res.data.videoAllData : [];
 });
 
@@ -17,7 +17,7 @@ export const fetchVideoById = createAsyncThunk(
   "videos/fetchById",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/video/${id}`);
+      const res = await fetch(`${API_URL}/api/video/${id}`);
       const data = await res.json();
       return data.videoById;
     } catch (err) {
@@ -31,7 +31,7 @@ export const fetchVideosByCategory = createAsyncThunk(
   "videos/fetchByCategory",
   async (category) => {
     const res = await axios.get(`${API_URL}/api/videos/category/${category}`);
-    // console.log("CATEGORY API RESPONSE:", res.data.videos);
+    console.log("CATEGORY API RESPONSE:", res.data.videos);
     return Array.isArray(res.data.videos) ? res.data.videos : [];
   }
 );
@@ -39,7 +39,7 @@ export const fetchVideosByCategory = createAsyncThunk(
 // 🔎 Search videos (main results)
 export const searchVideos = createAsyncThunk("videos/search", async (query) => {
   const res = await axios.get(`${API_URL}/api/videos/search/${query}`);
-  // console.log("SEARCH API RESPONSE:", res.data.results);
+  console.log("SEARCH API RESPONSE:", res.data.results);
   return Array.isArray(res.data.results) ? res.data.results : [];
 });
 
@@ -48,7 +48,7 @@ export const fetchSuggestions = createAsyncThunk(
   "videos/fetchSuggestions",
   async (query) => {
     const res = await axios.get(`${API_URL}/api/videos/search/${query}`);
-    // console.log("SUGGESTIONS API RESPONSE:", res.data.results);
+    console.log("SUGGESTIONS API RESPONSE:", res.data.results);
     // You can map to only needed fields
     return Array.isArray(res.data.results) ? res.data.results : [];
   }

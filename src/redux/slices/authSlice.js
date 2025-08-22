@@ -44,7 +44,7 @@ export const getMe = createAsyncThunk(
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log(res.data, "getme"); 
+      // console.log(res.data, "getme"); 
       return res.data;
     } catch (err) {
       return rejectWithValue(
