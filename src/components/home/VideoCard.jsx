@@ -36,7 +36,7 @@ const VideoCard = ({ video }) => {
 
       {/* Video Info Section */}
       <div className="p-3 flex gap-3">
-        {/* ✅ Channel Profile Image */}
+        {/* Channel Profile Image */}
         {video.channelId?.profileImage ? (
           <img
             src={video.channelId?.profileImage}
