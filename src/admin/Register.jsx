@@ -26,7 +26,7 @@ const Register = () => {
   useEffect(() => {
     if (token) {
       toast.success("Registration successful!");
-      navigate("/"); // or navigate("/dashboard")
+      navigate("/login"); // or navigate("/dashboard")
     }
   }, [token, navigate]);
 
@@ -88,74 +88,78 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <Toaster position="top-center" reverseOrder={false} />
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-        <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
-            Create Account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Join our community today
-          </p>
-        </div>
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <InputField
-              id="username"
-              name="username"
-              type="text"
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleChange}
-              error={errors.username}
-            />
-            <InputField
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Email address"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-            />
-            <PasswordField
-              id="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              showPassword={showPassword}
-              toggleShowPassword={() => setShowPassword(!showPassword)}
-              error={errors.password}
-            />
-            <PasswordField
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              showPassword={showConfirmPassword}
-              toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
-              error={errors.confirmPassword}
-            />
-          </div>
-
-          <SubmitButton loading={loading} />
-
-          <p className="mt-4 text-center text-sm text-gray-600">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="font-medium text-red-600 hover:text-red-700"
-            >
-              Sign in
-            </Link>
-          </p>
-        </form>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black p-4">
+  <Toaster position="top-center" reverseOrder={false} />
+  <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+    <div>
+      <h2 className="text-center text-3xl font-bold text-gray-900 dark:text-white">
+        Create Account
+      </h2>
+      <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+        Join our community today
+      </p>
     </div>
+
+    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      <div className="space-y-4">
+        <InputField
+          id="username"
+          name="username"
+          type="text"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleChange}
+          error={errors.username}
+          className="dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-red-500"
+        />
+        <InputField
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Email address"
+          value={formData.email}
+          onChange={handleChange}
+          error={errors.email}
+          className="dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-red-500"
+        />
+        <PasswordField
+          id="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          showPassword={showPassword}
+          toggleShowPassword={() => setShowPassword(!showPassword)}
+          error={errors.password}
+          className="dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-red-500"
+        />
+        <PasswordField
+          id="confirmPassword"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          showPassword={showConfirmPassword}
+          toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
+          error={errors.confirmPassword}
+          className="dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-red-500"
+        />
+      </div>
+
+      <SubmitButton loading={loading} className="dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-500" />
+
+      <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+        Already have an account?{" "}
+        <Link
+          to="/login"
+          className="font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+        >
+          Sign in
+        </Link>
+      </p>
+    </form>
+  </div>
+</div>
   );
 };
 

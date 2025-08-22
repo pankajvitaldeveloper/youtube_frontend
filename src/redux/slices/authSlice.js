@@ -24,12 +24,36 @@ export const loginUser = createAsyncThunk(
       const res = await axios.post(`${API_URL}/auth/login`, formData);
       // Save token in localStorage
       localStorage.setItem("token", res.data.token);
+      console.log("data check", res.data);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
     }
   }
 );
+
+
+export const getMe = createAsyncThunk(
+  "auth/getMe",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return rejectWithValue("No token");
+
+      const res = await axios.get(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log(res.data, "getme"); 
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch user"
+      );
+    }
+  }
+);
+
 
 const authSlice = createSlice({
   name: "auth",
@@ -73,7 +97,15 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+     
+      .addCase(getMe.fulfilled, (state, action) => {
+  // adjust based on backend
+  state.user = action.payload.user || action.payload;
+})
+      
+      
   },
 });
 

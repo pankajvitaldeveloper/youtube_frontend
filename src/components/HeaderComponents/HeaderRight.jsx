@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { IoSearchOutline } from "react-icons/io5";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/authSlice"; // ✅ import logout
+import { useNavigate } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle";
 
-const HeaderRight = ({setIsSearchOpen }) => {
+const HeaderRight = ({ setIsSearchOpen }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
+  const { user, token, loading } = useSelector((state) => state.auth);
+  if (loading) return <p>Loading...</p>;
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -16,6 +24,11 @@ const HeaderRight = ({setIsSearchOpen }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login"); // redirect to login
+  };
+
   return (
     <div className="flex items-center space-x-4">
       {/* Mobile: search icon */}
@@ -25,47 +38,58 @@ const HeaderRight = ({setIsSearchOpen }) => {
       >
         <IoSearchOutline />
       </button>
+
       <ThemeToggle />
 
-      {/* Profile dropdown */}
-      <div className="relative" ref={profileRef}>
-        <div
-          onClick={() => setIsProfileOpen(!isProfileOpen)}
-          className="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black cursor-pointer"
+      {/* If NOT logged in → Show Create button */}
+      {!token ? (
+        <button
+          onClick={() => navigate("/register")}
+          className="px-4 py-1 border text-black dark:text-white dark:border-white rounded-lg hover:bg-gray-200 dark:hover:bg-[#272727]"
         >
-          A
-        </div>
+          Sign in
+        </button>
+      ) : (
+        // If logged in → Profile Avatar + Dropdown
+        <div className="relative" ref={profileRef}>
+          <div
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
+            className="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black cursor-pointer"
+          >
+            {user?.username ? user.username.charAt(0).toUpperCase() : "U"}
+          </div>
 
-        {isProfileOpen && (
-          <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-black border border-gray-200 dark:border-[#272727] rounded-lg shadow-lg overflow-hidden z-50">
-            {/* Top: Profile Info */}
-            <div className="p-4 border-b border-gray-200 dark:border-[#272727]">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white text-lg">
-                  A
-                </div>
-                <div>
-                  <p className="font-semibold">Your Name</p>
-                  <p className="text-sm text-gray-500">@username123</p>
-                  <a
-                    href="/channel"
-                    className="text-blue-600 text-sm hover:underline"
-                  >
-                    View your channel
-                  </a>
+          {isProfileOpen && (
+            <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-black border border-gray-200 dark:border-[#272727] rounded-lg shadow-lg overflow-hidden z-50">
+              {/* Top: Profile Info */}
+              <div className="p-4 border-b border-gray-200 dark:border-[#272727]">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white text-lg">
+                    {user?.username ? user.username.charAt(0).toUpperCase() : "U"}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{user?.username}</p>
+                    <p className="text-sm text-gray-500">{user?.email}</p>
+                    <a
+                      href="/channel"
+                      className="text-blue-600 text-sm hover:underline"
+                    >
+                      View your channel
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Menu Items */}
-            <ul className="text-sm">
+              {/* Menu Items */}
+              
+               <ul className="text-sm">
               <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#272727] cursor-pointer">
                 Google Account
               </li>
               <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#272727] cursor-pointer">
                 Switch account
               </li>
-              <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#272727] cursor-pointer">
+              <li  onClick={handleLogout} className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#272727] cursor-pointer">
                 Sign out
               </li>
               <hr className="my-1 border-gray-200 dark:border-[#272727]" />
@@ -81,10 +105,13 @@ const HeaderRight = ({setIsSearchOpen }) => {
               <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#272727] cursor-pointer">
                 Appearance: Light/Dark
               </li>
-            </ul>
-          </div>
-        )}
-      </div>
+            </ul> 
+
+
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

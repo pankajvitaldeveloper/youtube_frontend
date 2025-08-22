@@ -15,10 +15,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ✅ get auth state
   const { token, loading, error } = useSelector((state) => state.auth);
 
-  // ✅ handle field changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,78 +24,84 @@ const Login = () => {
     });
   };
 
-  // ✅ handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      toast.error("Please fill in all fields");
+      toast.error("All fields are required to proceed.");
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      toast.error("Please enter a valid email address");
+      toast.error("Please enter a valid email address.");
       return;
     }
 
-    // ✅ Dispatch thunk
     dispatch(loginUser(formData));
   };
 
-  // ✅ Navigate on successful login
   useEffect(() => {
     if (token) {
-      toast.success("Login successful!");
-      navigate("/profile");
+      toast.success("Login successful. Redirecting to your dashboard.");
+      navigate("/");
     }
   }, [token, navigate]);
 
-  // ✅ Show error toast
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error(`Login failed: ${error}. Please try again.`);
     }
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center gradient-primary p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black p-4">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="max-w-md w-full space-y-8 bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] border border-white/20">
-        <div>
-          <h2 className="text-center text-3xl font-bold ">Welcome Back</h2>
-          <p className="mt-2 text-center text-sm ">
-            Please sign in to your account
+      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Sign In
+          </h2>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Please enter your credentials to access your account.
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                className="appearance-none relative block w-full px-3 py-3 border border-gray-300/20  bg-white/5 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="relative">
+        <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff0024] dark:focus:ring-[#ff0024] bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Password
+            </label>
+            <div className="mt-1 relative">
               <input
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                className="appearance-none relative block w-full px-3 py-3 border border-gray-300/20  bg-white/5 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Password"
+                className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff0024] dark:focus:ring-[#ff0024] bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
+                required
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
@@ -108,14 +112,12 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`group relative w-full flex text-white justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg  bg-purple-600 
-              ${loading ? "opacity-70 cursor-not-allowed" : "hover:bg-purple-700"} 
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300`}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ff0024] hover:bg-[#e60020] focus:outline-none focus:ring-2 focus:ring-[#ff0024] focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {loading ? (
               <span className="flex items-center">
                 <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 "
+                  className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -134,19 +136,20 @@ const Login = () => {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Signing in...
+                Signing In...
               </span>
             ) : (
-              "Sign in"
+              "Sign In"
             )}
           </button>
-          <p className="mt-4 text-center text-sm ">
-            Don't have an account?{" "}
+
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+            Don’t have an account?{" "}
             <Link
               to="/register"
-              className="font-medium transition-colors duration-200"
+              className="font-medium text-[#ff0024] hover:text-[#e60020] dark:text-[#ff0024] dark:hover:text-[#e60020] transition-colors duration-200"
             >
-              Register here
+              Create an account
             </Link>
           </p>
         </form>
